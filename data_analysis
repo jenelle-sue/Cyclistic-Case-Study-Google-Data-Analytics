@@ -1,0 +1,63 @@
+----------------------- verfied no duplicate ids remaining -------------------------
+SELECT
+   ride_id, COUNT(ride_id)
+FROM `cyclist-bike-data-471019.rider_data_2024.annual_rider_data_2024` 
+GROUP BY ride_id
+HAVING COUNT(ride_id) > 1;
+
+
+------------------ avg & mean ride lengths --------------------
+SELECT  
+AVG(ride_length) AS avg_ride_length,
+MAX (ride_length) AS max_ride_length,
+FROM `cyclist-bike-data-471019.rider_data_2024.final_cleaned_all_rider_data_2024` 
+
+
+------------------ avg & mean ride lengths by rider type -------------------
+SELECT  
+AVG(ride_length) AS avg_ride_length,
+MAX (ride_length) AS max_ride_length,
+member_casual,
+FROM `cyclist-bike-data-471019.rider_data_2024.final_cleaned_all_rider_data_2024` 
+GROUP BY member_casual;
+
+
+---------------------- most rides by day  -----------------------------------
+SELECT  
+COUNT(ride_id_cl) AS num_of_rides, 
+Day_of_week,
+FROM `cyclist-bike-data-471019.rider_data_2024.final_cleaned_all_rider_data_2024` 
+GROUP BY day_of_week;
+
+
+----------------- most rides by month ------------------------------
+SELECT  
+COUNT(ride_id_cl) AS num_of_rides, 
+month,
+FROM `cyclist-bike-data-471019.rider_data_2024.final_cleaned_all_rider_data_2024` 
+GROUP BY month;
+
+
+
+---------------- top 5 start stations for casual --------------------
+
+SELECT start_station_name, member_casual,
+  AVG(start_lat) AS start_lat, AVG(start_lng) AS start_lng,
+  COUNT(ride_id_cl) AS total_trips
+FROM `cyclist-bike-data-471019.rider_data_2024.final_cleaned_all_rider_data_2024`
+WHERE member_casual = 'casual'
+GROUP BY start_station_name, member_casual
+ORDER BY total_trips
+desc LIMIT 5;
+
+
+-------------------- top 5 start stations for members ----------------------
+
+SELECT start_station_name, member_casual,
+  AVG(start_lat) AS start_lat, AVG(start_lng) AS start_lng,
+  COUNT(ride_id_cl) AS total_trips
+FROM `cyclist-bike-data-471019.rider_data_2024.final_cleaned_all_rider_data_2024`
+WHERE member_casual = 'member'
+GROUP BY start_station_name, member_casual
+ORDER BY total_trips
+desc LIMIT 5;
