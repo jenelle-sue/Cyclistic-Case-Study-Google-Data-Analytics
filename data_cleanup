@@ -1,0 +1,63 @@
+---------------removed NULL values --------------------------------------
+DELETE FROM `cyclist-bike-data-471019.rider_data_2024.cleaned_annual_rider_data_2024` 
+WHERE start_station_name IS NULL OR start_station_id IS NULL OR end_station_name IS NULL OR end_station_id IS NULL OR end_lat IS NULL OR end_lng IS NULL;
+
+
+---------------- truncated start_at and ended_at -------------------------
+SELECT  
+    ride_id, rideable_type,
+  TIMESTAMP_TRUNC(started_at, SECOND) AS started_at_trunc,
+  TIMESTAMP_TRUNC(ended_at, SECOND) AS ended_at_trunc,
+  start_station_name, start_station_id, end_station_name, end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `cyclist-bike-data-471019.rider_data_2024.a_cleaned_all_rider_data_2024` 
+
+
+------------------- create new columns for day_of_week and month -----------------
+SELECT
+  ride_id, rideable_type, started_at_trunc, ended_at_trunc,
+  CASE EXTRACT(MONTH FROM started_at_trunc)
+    WHEN 1 THEN 'JAN'
+    WHEN 2 THEN 'FEB'
+    WHEN 3 THEN 'MAR'
+    WHEN 4 THEN 'APR'
+    WHEN 5 THEN 'MAY'
+    WHEN 6 THEN 'JUN'
+    WHEN 7 THEN 'JUL'
+    WHEN 8 THEN 'AUG'
+    WHEN 9 THEN 'SEP'
+    WHEN 10 THEN 'OCT'
+    WHEN 11 THEN 'NOVE'
+    WHEN 12 THEN 'DEC'
+  END AS month,
+  CASE EXTRACT(DAYOFWEEK FROM started_at_trunc)
+    WHEN 1 THEN 'SUN'
+    WHEN 2 THEN 'MON'
+    WHEN 3 THEN 'TUE'
+    WHEN 4 THEN 'WED'
+    WHEN 5 THEN 'THUR'
+    WHEN 6 THEN 'FRI'
+    WHEN 7 THEN 'SAT'
+  END AS day_of_week,
+  start_station_name, start_station_id, end_station_name, end_station_id,start_lat, start_lng, end_lat, end_lng, member_casual,
+FROM `cyclist-bike-data-471019.rider_data_2024.b_cleaned_all_rider_data_2024`
+
+
+--------------------- create new column for ride_length ---------------------------
+SELECT 
+  ride_id, rideable_type, started_at_trunc, ended_at_trunc, day_of_week, month, start_station_name, start_station_id, end_station_name, end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual, (
+  EXTRACT(HOUR FROM (ended_at_trunc - started_at_trunc)) * 60 +
+  EXTRACT (MINUTE FROM (ended_at_trunc - started_at_trunc)) +
+  EXTRACT (SECOND FROM (ended_at_trunc - started_at_trunc)) /60) AS ride_length  
+FROM `cyclist-bike-data-471019.rider_data_2024.c_cleaned_all_rider_data_2024`
+
+
+---------------------- deleted rows with ride_length <1 min or > 1 day--------------
+DELETE FROM cyclist-bike-data-471019.rider_data_2024.d_cleaned_all_rider_data_2024
+WHERE ride_length <1 OR ride_length > 1440;
+
+
+
+----------------------- deleted duplicate ride_id rows ----------------------------
+DELETE FROM cyclist-bike-data-471019.rider_data_2024.d_cleaned_all_rider_data_2024
+WHERE ride_length <1 OR ride_length > 1440;
+
