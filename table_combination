@@ -1,0 +1,25 @@
+------------------------- combining all 12 months of 2024 datasets ---------------------------
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_01
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_02
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_03
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_04
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_05
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_06
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_07
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_08
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_09
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_10
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_11
+UNION ALL
+SELECT * FROM cyclist-bike-data-471019.rider_data_2024.data_2024_12
+ORDER BY started_at;
