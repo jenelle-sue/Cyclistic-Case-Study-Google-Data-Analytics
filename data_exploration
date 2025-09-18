@@ -1,0 +1,57 @@
+-------------- verified there only member & casual listed ---------------------- 
+
+SELECT 
+   DISTINCT member_casual
+FROM `cyclist-bike-data-471019.rider_data_2024.annual_rider_data_2024` 
+
+
+------------------- count number of trips by member_casual ----------------------
+
+SELECT 
+   DISTINCT member_casual, COUNT(member_casual) AS number_of_trips
+FROM `cyclist-bike-data-471019.rider_data_2024.annual_rider_data_2024` 
+GROUP BY member_casual
+
+--------------------types of bikes available ---------------------------------------------
+
+SELECT
+   distinct(rideable_type) 
+FROM `cyclist-bike-data-471019.rider_data_2024.annual_rider_data_2024` 
+
+
+--------------------check length of ride_ids strings ---------------------------------
+
+SELECT
+   DISTINCT length(ride_id) 
+FROM `cyclist-bike-data-471019.rider_data_2024.annual_rider_data_2024`
+
+
+-------------------- rides longer than a day --------------------------------------------------------
+
+SELECT 
+   COUNT (*) AS longer_than_day
+FROM `cyclist-bike-data-471019.rider_data_2024.annual_rider_data_2024` 
+WHERE (
+   EXTRACT(HOUR FROM (ended_at - started_at)) * 60 +
+   EXTRACT(MINUTE FROM (ended_at - started_at)) +
+   EXTRACT(SECOND FROM (ended_at - started_at)) / 60) >= 1440;
+
+
+-------------------- rides less than a minute --------------------------------------------------
+
+SELECT 
+   COUNT (*) AS less_than_minute
+FROM `cyclist-bike-data-471019.rider_data_2024.annual_rider_data_2024` 
+WHERE (
+   EXTRACT(HOUR FROM (ended_at - started_at)) * 60 +
+   EXTRACT(MINUTE FROM (ended_at - started_at)) +
+   EXTRACT(SECOND FROM (ended_at - started_at)) / 60) <= 1;
+
+-------------------- check for duplicate ride_ids ----------------------------------------------
+
+SELECT
+   ride_id, COUNT(ride_id)
+FROM `cyclist-bike-data-471019.rider_data_2024.annual_rider_data_2024` 
+GROUP BY ride_id
+HAVING COUNT(ride_id) > 1;
+
